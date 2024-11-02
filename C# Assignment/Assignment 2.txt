@@ -1,7 +1,7 @@
 1. Write a C# Sharp program to swap two numbers.
-using System;
 
 Code:
+using System;
 
 namespace Assignment2Solving
 {
