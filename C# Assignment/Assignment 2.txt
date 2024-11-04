@@ -1,0 +1,249 @@
+1. Write a C# Sharp program to swap two numbers.
+
+Code:
+using System;
+
+namespace Assignment2Solving
+{
+    internal class Question1
+    {
+        static void Main(string[] args)
+        {
+            (int a, int b) = (5, 10);
+            Console.WriteLine("Before Swap a:{0}, b:{1}",a,b);
+            (a, b) = (b, a);
+
+            Console.WriteLine("\n========================Result========================\n");
+            Console.WriteLine("After Swap a:{0}, b:{1}", a, b);
+            Console.Read();
+        }
+    }
+}
+
+
+2. Write a C# program that takes a number as input and displays it four times in a row (separated by blank spaces), and then four times in the next row, with no separation. You should do it twice: Use the console. Write and use {0}.
+
+Test Data:
+Enter a digit: 25
+
+Expected Output:
+25 25 25 25
+25252525
+25 25 25 25
+25252525
+
+Code:
+
+using System;
+
+namespace Assignment2Solving
+{
+    public class Question2
+    {
+        static void Main()
+        {
+            Console.Write("Enter a digit: ");
+            int num = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("\n========================Result========================\n");
+            for (int i = 1; i <= 4; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    if (i % 2 != 0)
+                    {
+                        Console.Write(num + " ");
+                    }
+                    else
+                    {
+                        Console.Write(num);
+                    }
+                }
+                Console.WriteLine();
+            }
+            Console.Read();
+        }
+    }
+}
+
+
+
+3. Write a C# Sharp program to read any day number as an integer and display the name of the day as a word.
+
+Test Data / input: 2
+
+Expected Output :
+Tuesday
+
+Code:
+
+using System;
+
+namespace Assignment2Solving
+{
+    enum Days
+    {
+        Monday = 1,
+        Tuesday = 2,
+        Wednesday = 3,
+        Thursday = 4,
+        Friday = 5,
+        Saturday = 6,
+        Sunday = 7
+    }
+    public class Question3
+    {
+        static void Main(string[] args)
+        {
+            Console.Write("Input :");
+            int DayOfWeek = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("\n========================Result========================\n");
+            if (DayOfWeek > 0 && DayOfWeek < 8)
+                Console.WriteLine((Days)DayOfWeek);
+            else
+                Console.WriteLine("Invalid data");
+            Console.Read();
+        }
+        
+    }
+}
+
+
+
+ Arrays  :
+------------
+
+1.    Write a  Program to assign integer values to an array  and then print the following
+	a.	Average value of Array elements
+	b.	Minimum and Maximum value in an array 
+
+Code:
+
+using System;
+using System.Linq;
+
+namespace Assignment2Solving
+{
+    public class Arrays1
+    {
+        static void Main(string[] args)
+        {
+            Console.Write("Enter the array size:");
+            int arrSize = Convert.ToInt32(Console.ReadLine());
+            int[] arr = new int[arrSize];
+
+            for (int i = 0; i < arrSize; i++)
+            {
+                Console.Write("\n\nEnter the array {0} number:", i + 1);
+                arr[i] = Convert.ToInt32(Console.ReadLine());
+            }
+
+            Console.WriteLine("\n========================Result========================\n");
+
+            Console.WriteLine("\nAverage value of Array elements is  {0}", arr.Average());
+            Console.WriteLine("Minimum and Maximum value in an array : {0} and {1}", arr.Min(), arr.Max());
+            Console.Read();
+        }
+
+    }
+}
+
+    
+2.	Write a program in C# to accept ten marks and display the following
+	a.	Total
+	b.	Average
+	c.	Minimum marks
+	d.	Maximum marks
+	e.	Display marks in ascending order
+	f.	Display marks in descending order
+
+Code:
+
+using System;
+using System.Linq;
+
+namespace Assignment2Solving
+{
+    public class Arrays2
+    {
+        static void Main()
+        {
+            int[] arr = new int[10];
+
+            for (int i = 0; i < 10; i++)
+            {
+                Console.Write("\n\nEnter the array {0} number:", i + 1);
+                arr[i] = Convert.ToInt32(Console.ReadLine());
+            }
+
+            Console.WriteLine("\n========================Result========================\n");
+            Console.WriteLine("\nTotal mark is  {0}", arr.Sum());
+            Console.WriteLine("Average Mark is  {0}", arr.Average());
+            Console.WriteLine("Minimum and Maximum Mark is : {0} and {1}", arr.Min(), arr.Max());
+            Array.Sort(arr);
+            Console.WriteLine("Ascending order of marks are");
+            foreach (var item in arr)
+            {
+                Console.Write(item + " ");
+            }
+            Array.Reverse(arr);
+            Console.WriteLine("\nDescending order of marks are");
+            foreach (var item in arr)
+            {
+                Console.Write(item + " ");
+            }
+
+            Console.Read();
+
+        }
+       
+	
+	}
+}
+
+
+3.  Write a C# Sharp program to copy the elements of one array into another array.(do not use any inbuilt functions)
+
+Code:
+
+using System;
+namespace Assignment2Solving
+{
+    public class Arrays3
+    {
+        static void Main(string[] args)
+        {
+            Console.Write("Enter the array size:");
+            int arrSize = Convert.ToInt32(Console.ReadLine());
+            int[] arr = new int[arrSize];
+
+            for (int i = 0; i < arrSize; i++)
+            {
+                Console.Write("\n\nEnter the array {0} number:", i + 1);
+                arr[i] = Convert.ToInt32(Console.ReadLine());
+            }
+
+            Console.WriteLine("\n========================Result========================\n");
+
+            Console.Write("Source array :");
+            foreach (int i in arr)
+            {
+                Console.Write(i + " ");
+            }
+
+            int[] arr1 = new int[arrSize];
+            for (int i = 0; i < arrSize; i++)
+            {
+                arr1[i] = arr[i];
+            }
+
+            Console.Write("\nAfter copying all the elements from exsiting array :");
+            foreach (int i in arr1)
+            {
+                Console.Write(i + " ");
+            }
+
+            Console.Read();
+        }
+    }
+}
+
