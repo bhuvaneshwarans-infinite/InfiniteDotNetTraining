@@ -4,7 +4,7 @@ CREATE TABLE tblClients(
   	Cname VARCHAR(40) Not Null,
   	Address VARCHAR(30),
   	Email VARCHAR(30) Unique,
-  	Phone INT(10),
+  	Phone INT,
   	Business VARCHAR(20) Not Null
 );
 
