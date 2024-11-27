@@ -1,0 +1,167 @@
+CREATE TABLE DEPT (
+    deptno INT PRIMARY KEY,
+    dname VARCHAR(50),
+    loc VARCHAR(50)
+);
+
+
+CREATE TABLE EMP (
+    empno INT PRIMARY KEY,
+    ename VARCHAR(50),
+    job VARCHAR(50),
+    mgr_id INT,
+    hiredate DATE,
+    sal DECIMAL(10, 2),
+    comm DECIMAL(10, 2) DEFAULT NULL,
+    deptno INT,
+    FOREIGN KEY (deptno) REFERENCES DEPT(deptno),
+    FOREIGN KEY (mgr_id) REFERENCES EMP(empno)
+);
+
+INSERT INTO DEPT (deptno, dname, loc) VALUES
+(10, 'ACCOUNTING', 'NEW YORK'),
+(20, 'RESEARCH', 'DALLAS'),
+(30, 'SALES', 'CHICAGO'),
+(40, 'OPERATIONS', 'BOSTON');
+
+
+INSERT INTO EMP (empno, ename, job, mgr_id, hiredate, sal, comm, deptno) VALUES
+(7369, 'SMITH', 'CLERK', 7902, STR_TO_DATE('17-DEC-80', '%d-%b-%y'), 800, NULL, 20),
+(7499, 'ALLEN', 'SALESMAN', 7698, STR_TO_DATE('20-FEB-81', '%d-%b-%y'), 1600, 300, 30),
+(7521, 'WARD', 'SALESMAN', 7698, STR_TO_DATE('22-FEB-81', '%d-%b-%y'), 1250, 500, 30),
+(7566, 'JONES', 'MANAGER', 7839, STR_TO_DATE('02-APR-81', '%d-%b-%y'), 2975, NULL, 20),
+(7654, 'MARTIN', 'SALESMAN', 7698, STR_TO_DATE('28-SEP-81', '%d-%b-%y'), 1250, 1400, 30),
+(7698, 'BLAKE', 'MANAGER', 7839, STR_TO_DATE('01-MAY-81', '%d-%b-%y'), 2850, NULL, 30),
+(7782, 'CLARK', 'MANAGER', 7839, STR_TO_DATE('09-JUN-81', '%d-%b-%y'), 2450, NULL, 10),
+(7788, 'SCOTT', 'ANALYST', 7566, STR_TO_DATE('19-APR-87', '%d-%b-%y'), 3000, NULL, 20),
+(7839, 'KING', 'PRESIDENT', NULL, STR_TO_DATE('17-NOV-81', '%d-%b-%y'), 5000, NULL, 10),
+(7844, 'TURNER', 'SALESMAN', 7698, STR_TO_DATE('08-SEP-81', '%d-%b-%y'), 1500, 0, 30),
+(7876, 'ADAMS', 'CLERK', 7788, STR_TO_DATE('23-MAY-87', '%d-%b-%y'), 1100, NULL, 20),
+(7900, 'JAMES', 'CLERK', 7698, STR_TO_DATE('03-DEC-81', '%d-%b-%y'), 950, NULL, 30),
+(7902, 'FORD', 'ANALYST', 7566, STR_TO_DATE('03-DEC-81', '%d-%b-%y'), 3000, NULL, 20),
+(7934, 'MILLER', 'CLERK', 7782, STR_TO_DATE('23-JAN-82', '%d-%b-%y'), 1300, NULL, 10);
+```
+
+List all employees whose name begins with 'A'.
+
+SELECT ename
+FROM EMP
+WHERE ename LIKE 'A%';
+
+
+Select all those employees who don't have a manager.
+
+SELECT ename, empno
+FROM EMP
+WHERE mgr_id IS NULL;
+
+
+List employee name, number, and salary for those employees who earn in the range 1200 to 1400.
+
+SELECT ename, empno, sal
+FROM EMP
+WHERE sal BETWEEN 1200 AND 1400;
+
+
+Give all the employees in the RESEARCH department a 10% pay rise. Verify that this has been done by listing all their details before and after the rise.
+
+SELECT ename, empno, sal, deptno
+FROM EMP
+WHERE deptno = (SELECT deptno FROM DEPT WHERE dname = 'RESEARCH');
+
+-- Applying 10% pay hike
+UPDATE EMP
+SET sal = sal * ((sal/100)*10)
+WHERE deptno = (SELECT deptno FROM DEPT WHERE dname = 'RESEARCH');
+
+-- After pay rise
+SELECT ename, empno, sal, deptno
+FROM EMP
+WHERE deptno = (SELECT deptno FROM DEPT WHERE dname = 'RESEARCH');
+
+Find the number of CLERKS employed. Give it a descriptive heading.
+
+SELECT COUNT(*) AS "No. of CLERKS"
+FROM EMP
+WHERE job = 'CLERK';
+
+
+Find the average salary for each job type and the number of people employed in each job.
+
+SELECT job, AVG(sal) AS average_salary, COUNT(*) AS num_employees
+FROM EMP
+GROUP BY job;
+
+
+List the employees with the lowest and highest salary.
+
+SELECT ename, sal
+FROM EMP
+WHERE sal = (SELECT MIN(sal) FROM EMP)
+   OR sal = (SELECT MAX(sal) FROM EMP)
+ORDER BY sal DESC;
+
+
+List full details of departments that don't have any employees.
+
+SELECT D.*
+FROM DEPT D
+LEFT JOIN EMP E ON D.deptno = E.deptno
+WHERE E.deptno IS NULL;
+
+
+Get the names and salaries of all the analysts earning more than 1200 who are based in department 20. Sort the answer by ascending order of name.
+
+SELECT ename, sal
+FROM EMP
+WHERE job = 'ANALYST' AND sal > 1200 AND deptno = 20
+ORDER BY ename ASC;
+
+For each department, list its name and number together with the total salary paid to employees in that department.
+
+SELECT d.dname, d.deptno, SUM(e.sal) AS total_salary
+FROM DEPT d
+JOIN EMP e ON d.deptno = e.deptno
+GROUP BY d.deptno,d.dname;
+
+
+Find out the salary of both MILLER and SMITH.
+
+SELECT ename, sal
+FROM EMP
+WHERE ename = 'MILLER' OR ename = 'SMITH';
+
+
+Find out the names of the employees whose name begin with ‘A’ or ‘M’.
+
+SELECT ename
+FROM EMP
+WHERE ename LIKE 'A%' OR ename LIKE 'M%';
+
+
+Compute the yearly salary of SMITH.
+
+SELECT ename, sal * 12 AS yearly_salary
+FROM EMP
+WHERE ename = 'SMITH';
+
+List the name and salary for all employees whose salary is not in the range of 1500 and 2850.
+
+SELECT ename, sal
+FROM EMP
+WHERE sal NOT BETWEEN 1500 AND 2850;
+
+
+Find all managers who have more than 2 employees reporting to them.
+
+SELECT E.ename AS manager_name, E.empno AS mgr_id
+FROM EMP E
+WHERE E.empno IN (
+    SELECT M.mgr_id
+    FROM EMP M
+    WHERE M.mgr_id = E.empno
+    GROUP BY M.mgr_id
+    HAVING COUNT(*) > 2
+);
+
+
