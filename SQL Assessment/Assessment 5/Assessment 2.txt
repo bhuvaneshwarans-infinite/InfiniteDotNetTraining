@@ -1,0 +1,61 @@
+use Assignment2;
+
+--1.Write a query to display your birthday( day of week)
+select datename(WEEKDAY,'1997-03-25') as myBirthday
+
+--2.Write a query to display your age in days
+Select DATEDIFF(DAY,'1997-03-25',getdate()) as 'AgeInDays'
+
+--3.Write a query to display all employees information those who joined before 5 years in the current month
+select * from emp where Hiredate <DATEADD(year,-5,getdate()) and month(hiredate)=month(getdate())  
+
+
+--4.	Create table Employee with empno, ename, sal, doj columns or use and perform the following operations in a single transaction
+--	a. First insert 3 rows 
+--	b. Update the second row sal with 15% increment  
+--        c. Delete first row.
+--After completing above all actions, recall the deleted row without losing increment of second row.
+
+begin transaction
+select * from emp
+insert into EMP values (1, 'varun', 'clerk', 7902, '2022-03-11' , 800 ,null ,20),
+		       (2, 'tarun', 'accounting', 7902, '2022-08-11' , 800 ,null ,20),
+		       (3, 'siran', 'Sales', 7902, '2022-12-19' , 800 ,null ,30)
+update emp set sal=(sal/100)*15 where empno=2
+save tran t1
+delete from emp where empno=1
+rollback tran t1
+commit
+
+ 
+--5.      Create a user defined function calculate Bonus for all employees of a  given dept using 	following conditions
+--	a.     For Deptno 10 employees 15% of sal as bonus.
+--	b.     For Deptno 20 employees  20% of sal as bonus
+--	c      For Others employees 5%of sal as bonus
+
+create or alter Function Calculate_Bonus(@deptno int,@sal decimal(10,2))
+returns decimal(10,2)
+as 
+begin
+  declare @Bonus float;
+  if  @deptno=10
+     set  @bonus=@sal*0.15;
+  else if @deptno=20
+     set @bonus=@sal*0.20;
+  else
+       set @bonus=@sal*0.05;
+  return @bonus;
+end
+
+select dbo.Calculate_Bonus(deptno,sal) as bonus from emp
+
+
+--6. Create a procedure to update the salary of employee by 500 whose dept name is Sales and current salary is below 1500 (use emp table)
+create or alter proc  update_sal @empID int
+as
+begin
+    update emp set sal=sal+500 where deptno=(select deptno from dept where dname='SALES') and sal<1500 and empno=@empID
+end
+ 
+select * from emp
+exec update_sal 7654

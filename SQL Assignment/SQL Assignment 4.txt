@@ -1,0 +1,72 @@
+--T-SQL Program to Find the Factorial of a Given Number
+declare @inputNum int = 6;
+declare @ctr int = 1,@factRes int = 1;
+
+while @ctr <= @inputNum
+begin
+    set @factRes = @factRes * @ctr;
+    set @ctr = @ctr + 1;
+end
+
+print 'Factorial of number ' + cast(@inputNum as varchar) + ' is ' + cast(@factRes as varchar);
+
+
+--create a stored procedure to generate multiplication table that accepts a number and generates up to a given number. 
+create or alter proc PdMultiplicationTable (@mtable int,@endMul int)
+as
+begin
+    declare @ctr int = 1;
+    while @ctr <= @endMul
+    begin
+        print cast(@mtable as varchar) + ' x ' + cast(@ctr as varchar) + ' : ' + cast((@mtable * @ctr) as varchar);
+        set @ctr = @ctr + 1;
+    end
+end
+
+PdMultiplicationTable 5,10
+
+create table student (
+	Sid int identity(1,1) primary key,
+	Sname char(25) not null);
+	
+insert into student(Sname)Values 
+('Jack'), 
+('Rithvik'), 
+('Jaspreeth'), 
+('Praveen'), 
+('Bisa'), 
+('Suraj')
+
+
+create table marks (
+	Mid int identity(1,1) primary key,
+	Sid int,
+	foreign key(Sid) references student(Sid),
+	Score int not null );
+	
+insert into marks(Sid,Score) values
+(1,23),
+(6,95),
+(4,98),
+(2,17),
+(3,53),
+(5,13)
+
+
+-- create a function to calculate the status of the student. 
+-- If student score >=50 then pass, else fail. Display the data neatly
+create function GetStudentStatus (@Score int)
+returns varchar(10)
+as
+begin
+	declare @res varchar(10)='Fail'
+		if @Score >= 50
+			begin
+				set @res='Pass';
+			end		
+    return @res;
+end;
+
+
+select s.Sname, m.Score, dbo.GetStudentStatus(m.Score) as ResultStatus from student s 
+join marks m on s.Sid = m.Sid;
