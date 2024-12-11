@@ -1,0 +1,97 @@
+Create database Assessment6;
+
+use Assessment6;
+
+create table courseDetails(
+	C_id varchar(5) primary key,
+	C_Name varchar(25) unique not null,
+	Start_Date date not null,
+	End_Date date not null,
+	Fee bigint,
+);
+
+insert into courseDetails(C_id,C_Name,Start_Date,End_Date,Fee) values
+('DN003','DotNet',cast('2018-02-01' as date),cast('2018-02-28' as date),15000),
+('DV004','DataVisualization',cast('2018-03-01' as date),cast('2018-04-15' as date),15000),
+('JA002','AdvancedJava',cast('2018-01-02' as date),cast('2018-01-20' as date),10000),
+('JC001','CoreJava',cast('2018-01-02' as date),cast('2018-01-12' as date),3000)
+
+
+--Create a Function to calculate the course duration for the above relation by receiving start date and end date as input.
+create or alter Function FnCourseDuration(@stDate Date,@edDate date)
+returns int
+as 
+begin
+	Declare @CourseDuration int;
+	SET @CourseDuration=DATEDIFF(day,@stDate,@edDate);
+	return @CourseDuration;
+end
+
+select *,dbo.FnCourseDuration(Start_Date,End_Date) as courseDuration from courseDetails;
+
+
+
+--Create a trigger to display the Course Name and Start date of the course
+--(note: when ever the new course is entered in course details relation , Course Name and Start date should get reflected  in T_CourseInfo table)
+
+create table T_CourseInfo(
+	C_Name varchar(25) unique not null,
+	Start_Date date not null,
+	End_Date date not null,
+	C_id varchar(5), 
+	foreign key(C_id) references courseDetails(C_id)
+);
+
+
+create trigger trgCourseRelationUpdate
+on courseDetails
+for insert
+as
+begin
+  declare @C_ID varchar(5);
+  declare @C_Name varchar(25);
+  declare @Start_Date date;
+  declare @End_Date date;
+  select @C_ID=C_id,@C_Name=C_Name,@Start_Date=Start_Date,@End_Date=End_Date from inserted
+  insert into T_CourseInfo(C_Name,Start_Date,End_Date,C_id) values
+  (@C_Name,@Start_Date,@End_Date,@C_ID);
+end
+
+-- before
+select * from T_CourseInfo;
+insert into courseDetails(C_id,C_Name,Start_Date,End_Date,Fee) values
+('DN004','Azure',cast('2018-02-01' as date),cast('2018-04-28' as date),25000);
+-- after
+select * from T_CourseInfo;
+
+
+--Write a stored Procedure that inserts records in the ProductsDetails table
+ 
+--Table : ProductsDetails (ProductId, ProductName, Price, DiscountedPrice)
+ 
+--The procedure should generate the ProductId automatically to insert and should return the generated value to the user
+--Hint(User should not give the ProductId while inserting)
+--Also the Discounted Price Column is a calculated column (Price - 10%)
+
+  create table ProductsDetails(
+	ProductId int identity(1,1) primary key,
+	ProductName varchar(40) not null,
+	Price float not null
+  );
+
+ alter table ProductsDetails
+ add DiscountPrice as((Price/100)*10) persisted
+
+ select * from ProductsDetails;
+
+
+create or alter proc spInsertAndRetID @ProductName varchar(40), @Price float
+as
+begin
+	insert into ProductsDetails(ProductName, Price) values (@ProductName,@Price);
+	select * from ProductsDetails where ProductName=@ProductName and Price=@Price;
+end
+
+select * from ProductsDetails;
+
+--execute spInsertAndRetID 'fiveStar',30
