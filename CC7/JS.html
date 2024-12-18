@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+
+    <title></title>
+</head>
+<body>
+
+    <!--Write a JavaScript program to calculate multiplication and division of two numbers (input from user).-->
+    <div>
+        <div style="margin:3px 0px">
+            <span><label for="txtFirstInput">1st Number:</label></span>
+            <span><input type="number" id="txtFirstInput" /></span>
+        </div>
+        <div style="margin:3px 0px">
+            <span><label for="txtSecondInput">2nd Number:</label></span>
+            <span><input type="number" id="txtSecondInput" /></span>
+        </div>
+        <div style="margin:3px 0px">
+            <button onclick="Calculate('multiply')">Multiply</button>
+            <button onclick="Calculate('divide')">Divide</button>
+        </div>
+        <div id="ops"></div>
+        <div>The Result is</div>
+        <div id="result"></div>
+    </div>
+
+    <!--Write a JavaScript for loop that will iterate from 0 to 15. For each iteration,
+    it will check if the current number is odd or even, and display a message to the screen.-->
+    <h2>Question 2</h2>
+
+    <div>
+        <div style="margin:3px 0px">
+            <span><label for="txtQ2IntialInput">Intial Range:</label></span>
+            <span><input type="number" id="txtQ2IntialInput" value="0" /></span>
+        </div>
+        <div style="margin:3px 0px">
+            <span><label for="txtQ2EndInput">End Range:</label></span>
+            <span><input type="number" id="txtQ2EndInput" /></span>
+        </div>
+        <div style="margin:3px 0px">
+            <button onclick="CheckEvenOrOdd()">Show Question 2 result</button>
+        </div>
+        <h2>Result:</h2>
+        <div id="Q2Result" style="margin:3px 0px"></div>
+    </div>
+
+    <!--Write a JavaScript program that creates a button and add a click event listener
+    to log a message when it's clicked.-->
+    <h2>Question 3</h2>
+    <button onclick="createButton()">Create Button</button>
+    <div id="res3" style="padding:3px;"></div>
+    <script>
+        function Calculate(operation) {
+            var firstInput = document.getElementById("txtFirstInput").value;
+            var secondInput = document.getElementById("txtSecondInput").value;
+
+            switch (operation) {
+                case 'multiply':
+                    document.getElementById("result").innerHTML = firstInput * secondInput;
+                    document.getElementById("ops").innerHTML = "<h2> Mulitplication Operation</h2>";
+                    break;
+                case 'divide':
+                    document.getElementById("result").innerHTML = firstInput / secondInput;
+                    document.getElementById("ops").innerHTML = "<h2> Division Operation</h2>";
+                    break;
+                default:
+                    alert("Operation Unavailable");
+                    break;
+            }
+
+        }
+
+        function CheckEvenOrOdd() {
+
+            var intial = document.getElementById("txtQ2IntialInput").value;
+            var end = document.getElementById("txtQ2EndInput").value;
+            var result = "";
+            for (var i = intial; i <= end; i++) {
+                if (i % 2 == 0) {
+                    result = result + " " + i + " is even<br/>";
+                }
+                else {
+                    result = result + " " + i + " is odd<br/>";
+                }
+
+            }
+            document.getElementById("Q2Result").innerHTML = result
+
+        }
+
+        function createButton() {
+            var btn = document.createElement('button');
+            btn.innerHTML = "I'm Here";
+            btn.onClick = console.log("I'm Created nd triggered");
+            document.getElementById("res3").appendChild(btn);
+        }
+
+    </script>
+</body>
+</html>
