@@ -1,0 +1,35 @@
+﻿
+
+@{
+    ViewBag.Title = "YearMovies";
+}
+
+<h2>YearMovies</h2>
+
+
+
+<form action="YearMovieResult" method="post">
+
+    <div class="form-horizontal">
+        <h4>Movie</h4>
+        <hr />
+        <div class="form-group">
+            @Html.Label("DateofRelease")
+            <div class="col-md-10">
+                @Html.Editor("DateofRelease")
+            </div>
+        </div>
+
+        <div>
+            <div>
+                <input type="submit" value="Check" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+
+</form>
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+
